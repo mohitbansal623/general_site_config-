@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_form_alter()
+ */ 
+function general_site_config_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+    
+    // Fetching the form_id of site information page and adding the textfield for site api key.
+    if ($form_id == 'system_site_information_settings') {
+        
+      // Getting the siteapikey from the config if exists.
+      $siteapikey = \Drupal::config('siteapikey.config')->get('siteapikey');
+      
+      // Defining the form text field.
+      $form['site_information']['siteapikey'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Site API Key'),
+        '#default_value' => $siteapikey ?: 'No API Key yet',
+    '#description' => t("Site API Key Field"),
+      );
+      
+      // Defining the submit handler for saving this value.
+      $form['#submit'][] = 'save_apikey';
+      
+      // Changing the Submit button text after saving the form.
+      $form['actions']['submit']['#value'] = t('Update configuration');
+    }
+}
+
+function save_apikey(array $form, \Drupal\Core\Form\FormStateInterface  $form_state){
+    
+    // Update the system variable Site API Key
+    $config = \Drupal::configFactory()->getEditable('siteapikey.config');
+    $siteapikey = $form_state->getValue('siteapikey');
+    $config->set('siteapikey', $siteapikey);
+    $config->save();
+          
+    // Display  message that Site API Key has been set
+    \Drupal::messenger()->addMessage(t("Site API Key has been set to " . $siteapikey), 'status', TRUE);
+}

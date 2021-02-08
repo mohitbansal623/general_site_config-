@@ -1,0 +1,5 @@
+name: General Site Configurations
+description: This module is used for managing general site Configurations
+package: Custom
+core: 8.x
+type: module

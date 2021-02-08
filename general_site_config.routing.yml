@@ -1,0 +1,7 @@
+general_site_config.json_data:
+  path: '/page_json/{key}/{nid}'
+  defaults:
+    _controller: '\Drupal\general_site_config\Controller\GetPageJson::getData'
+    _format: json
+  requirements:
+    _access: 'TRUE'
